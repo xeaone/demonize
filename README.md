@@ -1,17 +1,20 @@
 # Demonize #
 Demonize / Daemonize Using Node.js
 
+`Demonize.it(options)` will demonize a program and return the Node.js child process object.
 
-## Example ##
+`Demonize.generate(options, callback)` will create a standalone Node.js demon script that can be ran by simply running `node demon.js`
+
+
+## Examples ##
 ```JavaScript
 const Demonize = require('demonize');
 
 const options = {
-	env: { PORT: 4444 },
-	cwd: '/Users/Alex/psudo-server/www/node/test/.',
 	arg: 'app.js',
+	err: 'ignore',
 	out: __dirname + '/out.log',
-	err: 'ignore'
+	cwd: '/Path/To/Node/Application'
 };
 
 const child = Demonize.it(options);
@@ -19,12 +22,37 @@ const child = Demonize.it(options);
 console.log(child);
 ```
 
+```JavaScript
+const Demonize = require('demonize');
+
+const options = {
+	env: { PORT: 4444 },
+	arg: ['server.js'],
+	err: __dirname + '/out.log',
+	out: __dirname + '/out.log',
+	cwd: '/Path/To/Node/Application',
+
+	fd: '/Path/To/Add/Generated/demon.js'
+};
+
+Demonize.generate(options, function (error) {
+	if (error) throw error;
+	else console.log('Created Standalone Demonize Script');
+});
+```
+
 ## Options ##
-* `env: Object` - '{ YOUR: 'ENVS'}' (Default `{}`)
-* `cwd: String` - '/Path/To/Executable' (Default `process.cwd()`)
-* `arg: String || Array` -  'app.js' || ['index.js']
-* `out: String` - '/Path/To/File/out.log' || 'pipe' || 'ignore' || 'inherit' (Default `'ignore'`)
-* `err: String` - '/Path/To/File/err.log' || 'pipe' || 'ignore' || 'inherit' (Default `'ignore'`)
+* `env: Object` - (Default `{}`)
+
+* `arg: String || Array` - (Default `['index.js']`)
+
+* `cwd: String` - `'/Path/To/Executable'` (Default `process.cwd()`)
+
+* `out: String` - `'/Path/To/File/out.log'`, `'pipe'`, `'ignore'`, or `'inherit'` (Default `'ignore'`)
+
+* `err: String` - `'/Path/To/File/err.log'`, `'pipe'`, `'ignore'`, or `'inherit'` (Default `'ignore'`)
+
+* `fd: String` - `'/Path/To/Add/Generated/demon.js'` (Default `'./demon.js'`)
 
 
 ## TODO ##
