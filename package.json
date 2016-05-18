@@ -1,11 +1,20 @@
 {
   "name": "demonize",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Demonize / Daemonize Using Node.js",
   "main": "index.js",
   "scripts": {
-    "test": ""
+    "test": "node test/test.js"
   },
+  "keywords": [
+    "demon",
+    "demonize",
+    "daemon",
+    "daemonize",
+    "generate",
+    "startup",
+    "script"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AlexanderElias/demonize.git"
