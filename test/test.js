@@ -1,5 +1,3 @@
-'use strict';
-
 const Demonize = require('../index.js');
 
 const options = {

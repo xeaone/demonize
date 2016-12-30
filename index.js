@@ -1,40 +1,59 @@
-'use strict';
-
-const Spawn = require('child_process').spawn;
+const ChildProcess = require('child_process');
 const Fs = require('fs');
 
 const UTF8 = 'utf8';
 const TEMPLATE = __dirname + '/templates/demon.js';
 
-exports.it = function (options) {
+function getStd (std) {
+	if (std === null || std === undefined) return 'ignore';
+
+	const isPath = isStdPath(std);
+
+	if (!isPath) return std;
+	if (isPath) return Fs.openSync(std, 'a');
+}
+
+function getStdToString (std) {
+	if (std === null || std === undefined) return JSON.stringify('ignore');
+
+	const isPath = isStdPath(std);
+
+	if (!isPath) return JSON.stringify(std);
+	if (isPath) return 'Fs.openSync(\'' + std + '\', \'a\')';
+}
+
+function isStdPath (std) {
+	return (std !== 'pipe' || std !== 'inherit' || std !== 'ignore') ? true : false;
+}
+
+module.exports.it = function (options) {
 	var arg = null;
 
-	const out = getStd(options.out);
-	const err = getStd(options.err);
-	const env = options.env || {};
-	const cwd = options.cwd || process.cwd();
-	const cmd = options.cmd || process.execPath;
+	var out = getStd(options.out);
+	var err = getStd(options.err);
+	var env = options.env || {};
+	var cwd = options.cwd || process.cwd();
+	var cmd = options.cmd || process.execPath;
 
-	arg = (options.arg) ? options.arg : 'index.js';
-	arg = (Array.isArray(options.arg)) ? options.arg : [options.arg];
+	arg = options.arg ? options.arg : 'index.js';
+	arg = Array.isArray(options.arg) ? options.arg : [options.arg];
 
-	const opt = {
+	var opt = {
 		env: env,
 		cwd: cwd,
 		detached: true,
 		stdio: ['ignore', out, err]
 	};
 
-	// spawn unref return
-	const child = Spawn(cmd, arg, opt);
+	var child = ChildProcess.spawn(cmd, arg, opt);
 
 	child.unref();
 
 	return child;
 };
 
-exports.generate = function (options, callback) {
-	const mode = '777'; // read write execute - all
+module.exports.generate = function (options, callback) {
+	var mode = '777'; // read write execute - all
 
 	Fs.readFile(TEMPLATE, UTF8, function (error, file) {
 		if (error) return callback(error);
@@ -68,7 +87,7 @@ exports.generate = function (options, callback) {
 		file = file.replace('/*CWD*/', cwd);
 		file = file.replace('/*CMD*/', cmd);
 
-		const path = (options.fd) ? options.fd : process.cwd() + '/demon.js';
+		var path = (options.fd) ? options.fd : process.cwd() + '/demon.js';
 
 		Fs.writeFile(path, file, function (error) {
 			if (error) return callback(error);
@@ -81,25 +100,3 @@ exports.generate = function (options, callback) {
 
 	});
 };
-
-function getStd (std) {
-	if (std === null || std === undefined) return 'ignore';
-
-	const isPath = isStdPath(std);
-
-	if (!isPath) return std;
-	if (isPath) return Fs.openSync(std, 'a');
-}
-
-function getStdToString (std) {
-	if (std === null || std === undefined) return JSON.stringify('ignore');
-
-	const isPath = isStdPath(std);
-
-	if (!isPath) return JSON.stringify(std);
-	if (isPath) return 'Fs.openSync(\'' + std + '\', \'a\')';
-}
-
-function isStdPath (std) {
-	return (std !== 'pipe' || std !== 'inherit' || std !== 'ignore') ? true : false;
-}
