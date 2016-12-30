@@ -5,25 +5,13 @@ const UTF8 = 'utf8';
 const TEMPLATE = __dirname + '/templates/demon.js';
 
 function getStd (std) {
-	if (std === null || std === undefined) return 'ignore';
-
-	const isPath = isStdPath(std);
-
-	if (!isPath) return std;
-	if (isPath) return Fs.openSync(std, 'a');
+	if (!std) return 'ignore';
+	else return Fs.openSync(std, 'a');
 }
 
 function getStdToString (std) {
-	if (std === null || std === undefined) return JSON.stringify('ignore');
-
-	const isPath = isStdPath(std);
-
-	if (!isPath) return JSON.stringify(std);
-	if (isPath) return 'Fs.openSync(\'' + std + '\', \'a\')';
-}
-
-function isStdPath (std) {
-	return (std !== 'pipe' || std !== 'inherit' || std !== 'ignore') ? true : false;
+	if (!std) return 'ignore';
+	else return 'Fs.openSync(\'' + std + '\', \'a\')';
 }
 
 module.exports.it = function (options) {

@@ -1,6 +1,6 @@
 {
   "name": "demonize",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Demonize / Daemonize Using Node.js",
   "main": "index.js",
   "scripts": {
