@@ -1,26 +1,13 @@
-#!/usr/bin/env node
-
-'use strict';
+#!/usr/bin/node
 
 const Spawn = require('child_process').spawn;
 const Fs = require('fs');
 
-const env = /*ENV*/;
+const options = /*OPTIONS*/;
 
-const arg = /*ARG*/;
+options.stdio[1] = options.out === 'ignore' ? options.out : Fs.openSync(options.out, 'a');
+options.stdio[2] = options.err === 'ignore' ? options.err : Fs.openSync(options.err, 'a');
 
-const cwd = /*CWD*/;
+const child = Spawn(options.cmd, options.arg, options);
 
-const cmd = /*CMD*/;
-
-const out = /*OUT*/;
-const err = /*ERR*/;
-
-const opt = {
-	env: env,
-	cwd: cwd,
-	detached: true,
-	stdio: ['ignore', out, err]
-};
-
-Spawn(cmd, arg, opt).unref();
+child.unref();

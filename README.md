@@ -1,9 +1,7 @@
 # Demonize #
-Demonize / Daemonize Using Node.js
+Demonize / Daemonize With Node.js
 
-`Demonize.it(options)` will demonize a program and return the Node.js child process object.
-
-`Demonize.generate(options, callback)` will create a standalone Node.js demon script that can be ran by simply running `node demon.js`
+This library will demonize a program and return the child process. It can also create a standalone demonizable script that can be started just like a bash script `./demon.js`
 
 
 ## Examples ##
@@ -11,10 +9,10 @@ Demonize / Daemonize Using Node.js
 const Demonize = require('demonize');
 
 const options = {
-	arg: 'app.js',
-	err: 'ignore',
-	out: __dirname + '/out.log',
-	cwd: '/Path/To/Node/Application'
+	arg: 'server.js',
+	env: { PORT: 8000 },
+	err: __dirname + '/out.log',
+	out: __dirname + '/out.log'
 };
 
 const child = Demonize.it(options);
@@ -26,11 +24,10 @@ console.log(child);
 const Demonize = require('demonize');
 
 const options = {
-	env: { PORT: 4444 },
+	env: { PORT: 8000 },
 	arg: ['server.js'],
 	err: __dirname + '/out.log',
 	out: __dirname + '/out.log',
-	cwd: '/Path/To/Node/Application',
 
 	fd: '/Path/To/Add/Generated/demon.js'
 };
@@ -41,19 +38,29 @@ Demonize.generate(options, function (error) {
 });
 ```
 
+## API ##
+- `Demonize.it`
+	- `options: Object` **required**
+
+- `Demonize.generate`
+	- `options: Object` **required**
+	- `callback: Function` If a callback is not provided the generator will output a file synchronously. Other wise it will be asynchronous.
+
+
 ## Options ##
-* `env: Object` - (Default `{}`)
+The same options that are available to the Node.js `ChildProcess.spawn` are also available as options.
 
-* `arg: String || Array` - (Default `['index.js']`)
+- `arg: String || Array` A string or array of arguments. Alias for `args`.
+- `env: Object` (Defaults `{}`)
 
-* `cwd: String` - `'/Path/To/Executable'` (Default `process.cwd()`)
+- `cmd: String` The path to the executable (Default `process.execPath`)
+- `cwd: String` The path to the current working directory (Default `process.cwd()`)
 
-* `out: String` - `'/Path/To/File/out.log'`, `'pipe'`, `'ignore'`, or `'inherit'` (Default `'ignore'`)
+- `out: String` The path to a file `/path/out.log` or `ignore` (Defaults to `ignore`)
+- `err: String` The path to a file `/path/err.log` or `ignore` (Defaults to `ignore`)
 
-* `err: String` - `'/Path/To/File/err.log'`, `'pipe'`, `'ignore'`, or `'inherit'` (Default `'ignore'`)
-
-* `fd: String` - `'/Path/To/Add/Generated/demon.js'` (Default `'./demon.js'`)
+- `fd: String` The path to output a generated demon file (Default `./demon.js`)
 
 
 ## TODO ##
-* Demonize.me()
+- Demonize.me()
