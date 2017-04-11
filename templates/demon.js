@@ -1,4 +1,4 @@
-#!/usr/bin/node
+#!/usr/bin/env node
 
 const Spawn = require('child_process').spawn;
 const Fs = require('fs');
