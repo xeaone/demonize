@@ -1,28 +1,28 @@
 {
-  "name": "demonize",
-  "version": "1.1.6",
-  "description": "Demonize / Daemonize Using Node.js",
-  "main": "index.js",
-  "scripts": {
-    "test": "node test/test.js"
-  },
-  "keywords": [
-    "demon",
-    "demonize",
-    "daemon",
-    "daemonize",
-    "generate",
-    "startup",
-    "script"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AlexanderElias/demonize.git"
-  },
-  "author": "Alexander Elias",
-  "license": "SEE LICENSE IN LICENSE",
-  "bugs": {
-    "url": "https://github.com/AlexanderElias/demonize/issues"
-  },
-  "homepage": "https://github.com/AlexanderElias/demonize#readme"
+	"name": "demonize",
+	"version": "2.0.0",
+	"description": "Demonize / Daemonize Using Node.js",
+	"main": "index.js",
+	"scripts": {
+		"test": "node test/test.js"
+	},
+	"keywords": [
+		"demon",
+		"demonize",
+		"daemon",
+		"daemonize",
+		"generate",
+		"startup",
+		"script"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/AlexanderElias/demonize.git"
+	},
+	"author": "Alexander Elias",
+	"license": "SEE LICENSE IN LICENSE",
+	"bugs": {
+		"url": "https://github.com/AlexanderElias/demonize/issues"
+	},
+	"homepage": "https://github.com/AlexanderElias/demonize#readme"
 }

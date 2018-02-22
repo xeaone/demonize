@@ -1,11 +1,11 @@
-# Demonize #
+# Demonize
 Demonize / Daemonize With Node.js
 
 This library will demonize a program and return the child process. It can also create a standalone demonizable script that can be started just like a bash script `./demon.js`
 
 
-## Examples ##
-```JavaScript
+## Examples
+```js
 const Demonize = require('demonize');
 
 const options = {
@@ -19,8 +19,7 @@ const child = Demonize.it(options);
 
 console.log(child);
 ```
-
-```JavaScript
+```js
 const Demonize = require('demonize');
 
 const options = {
@@ -38,7 +37,7 @@ Demonize.generate(options, function (error) {
 });
 ```
 
-## API ##
+## API
 - `Demonize.it`
 	- `options: Object` **required**
 
@@ -47,7 +46,7 @@ Demonize.generate(options, function (error) {
 	- `callback: Function` If a callback is not provided the generator will output a file synchronously. Other wise it will be asynchronous.
 
 
-## Options ##
+## Options
 The same options that are available to the Node.js `ChildProcess.spawn` are also available as options.
 
 - `arg: String || Array` A string or array of arguments. Alias for `args`.
@@ -61,6 +60,9 @@ The same options that are available to the Node.js `ChildProcess.spawn` are also
 
 - `fd: String` The path to output a generated demon file (Default `./demon.js`)
 
+## Authors
+[AlexanderElias](https://github.com/AlexanderElias)
 
-## TODO ##
-- Demonize.me()
+## License
+[Why You Should Choose MPL-2.0](http://veldstra.org/2016/12/09/you-should-choose-mpl2-for-your-opensource-project.html)
+This project is licensed under the MPL-2.0 License

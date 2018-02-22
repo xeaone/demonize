@@ -1,12 +1,20 @@
-const ChildProcess = require('child_process');
-const Path = require('path');
+'use strict';
+
 const Fs = require('fs');
+const Util = require('util');
+const Path = require('path');
+const Cp = require('child_process');
+
+const Open = Util.promisify(Fs.open);
+const Chmod = Util.promisify(Fs.chmod);
+const ReadFile = Util.promisify(Fs.readFile);
+const WriteFile = Util.promisify(Fs.writeFile);
 
 const MODE = '777'; // read write execute - all
-const UTF8 = 'utf8';
+const ENCODING = 'utf8';
 const TEMPLATE = Path.join(__dirname, 'templates', 'demon.js');
 
-function opt (options) {
+const opt = function (options) {
 	options = options || {};
 
 	options.detached = true;
@@ -29,57 +37,40 @@ function opt (options) {
 	options.fd = options.fd ? options.fd : Path.join(process.cwd(), 'demon.js');
 
 	return options;
-}
+};
 
-module.exports.it = function (options) {
+module.exports.it = async function (options) {
 	options = opt(options);
 
-	options.stdio[1] = options.out === 'ignore' ? options.out : Fs.openSync(options.out, 'a');
-	options.stdio[2] = options.err === 'ignore' ? options.err : Fs.openSync(options.err, 'a');
+	if (options.out === 'ignore') {
+		options.stdio[1] = options.out;
+	} else {
+		options.stdio[1] = await Open(options.out, 'a');
+	}
 
-	var child = ChildProcess.spawn(options.cmd, options.arg, options);
+	if (options.err === 'ignore') {
+		options.stdio[2] = options.err;
+	} else {
+		options.stdio[2] = await Open(options.err, 'a');
+	}
+
+	const child = Cp.spawn(options.cmd, options.arg, options);
 
 	child.unref();
 
 	return child;
 };
 
-module.exports.generate = function (options, callback) {
+module.exports.generate = async function (options) {
 	options = opt(options);
 
-	if (callback) {
-		Fs.readFile(TEMPLATE, UTF8, function (error, data) {
-			if (error) return callback(error);
+	let data = await ReadFile(TEMPLATE, ENCODING);
 
-			try {
-				data = data.replace(
-					'/*OPTIONS*/',
-					JSON.stringify(options, null, '\t')
-				);
-			} catch (e) {
-				return callback(e);
-			}
+	data = data.replace(
+		'/*OPTIONS*/',
+		JSON.stringify(options, null, '\t')
+	);
 
-			Fs.writeFile(options.fd, data, function (error) {
-				if (error) return callback(error);
-
-				Fs.chmod(options.fd, MODE, function (error) {
-					if (error) return callback(error);
-
-					return callback();
-				});
-			});
-		});
-	} else {
-		var data = Fs.readFileSync(TEMPLATE, UTF8);
-
-		data = data.replace(
-			'/*OPTIONS*/',
-			JSON.stringify(options, null, '\t')
-		);
-
-		Fs.writeFileSync(options.fd, data);
-		Fs.chmodSync(options.fd, MODE);
-	}
-
+	await WriteFile(options.fd, data);
+	await Chmod(options.fd, MODE);
 };

@@ -9,6 +9,12 @@ const options = {
 	err:  Path.join(__dirname, 'err.log')
 };
 
-const child = Demonize.it(options);
+(async function () {
 
-console.log(child);
+	const child = await Demonize.it(options);
+
+	console.log(child);
+
+})().catch(function (error) {
+	console.error(error);
+});

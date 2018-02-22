@@ -6,12 +6,17 @@ const options = {
 	arg: 'server.js',
 	cwd: __dirname,
 	out: Path.join(__dirname, 'out.log'),
-	err:  Path.join(__dirname, 'err.log'),
+	err: Path.join(__dirname, 'err.log'),
 
 	fd: Path.join(__dirname, 'GENERATED_DEMON.js')
 };
 
-Demonize.generate(options, function (error) {
-	if (error) throw error;
-	else console.log('Created Standalone Demonize Script');
+(async function () {
+
+	await Demonize.generate(options);
+
+	console.log('Created standalone demonize script');
+
+})().catch(function (error) {
+	console.error(error);
 });
